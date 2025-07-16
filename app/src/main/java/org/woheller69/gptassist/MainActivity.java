@@ -65,11 +65,11 @@ public class MainActivity extends Activity {
     private CookieManager chatCookieManager = null;
     private final Context context = this;
     private SwipeTouchListener swipeTouchListener;
-    private String TAG ="gptAssist";
-    private String urlToLoad = "https://chatgpt.com/";
-    private static boolean restricted = true;
+    private final String TAG ="gptAssist";
+    private final String urlToLoad = "https://chatgpt.com/";
+    private static boolean shouldRestrict = true;
 
-    private static final ArrayList<String> allowedDomains = new ArrayList<String>();
+    private static final ArrayList<String> allowedDomains = new ArrayList<>();
 
     private ValueCallback<Uri[]> mUploadMessage;
     private final static int FILE_CHOOSER_REQUEST_CODE = 1;
