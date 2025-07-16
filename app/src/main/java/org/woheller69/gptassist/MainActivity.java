@@ -312,11 +312,11 @@ public class MainActivity extends Activity {
         if (event.getAction() == KeyEvent.ACTION_DOWN) {
             if (keyCode == KeyEvent.KEYCODE_BACK) {
                 if (chatWebView.canGoBack() && !Objects.equals(chatWebView.getUrl(), "about:blank")) {
-                        chatWebView.goBack();
-                    } else {
-                        finish();
-                    }
-                    return true;
+                    chatWebView.goBack();
+                } else {
+                    finish();
+                }
+                return true;
             }
         }
         return super.onKeyDown(keyCode, event);
@@ -328,8 +328,8 @@ public class MainActivity extends Activity {
         chatWebView.clearHistory();
         chatWebView.clearMatches();
         chatWebView.clearSslPreferences();
-        chatCookieManager.removeSessionCookie();
-        chatCookieManager.removeAllCookie();
+        chatCookieManager.removeSessionCookies(null);
+        chatCookieManager.removeAllCookies(null);
         CookieManager.getInstance().removeAllCookies(null);
         CookieManager.getInstance().flush();
         WebStorage.getInstance().deleteAllData();
