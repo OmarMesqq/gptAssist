@@ -56,6 +56,7 @@ import androidx.webkit.URLUtilCompat;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class MainActivity extends Activity {
 
@@ -209,13 +210,13 @@ public class MainActivity extends Activity {
                 }
                 boolean allowed = false;
                 for (String url : allowedDomains) {
-                    if (request.getUrl().getHost().endsWith(url)) {
+                    if (Objects.requireNonNull(request.getUrl().getHost()).endsWith(url)) {
                         allowed = true;
                     }
                 }
                 if (!allowed) {
                     Log.d(TAG, "[shouldInterceptRequest][NOT ON ALLOWLIST] Blocked access to " + request.getUrl().getHost());
-                    if (request.getUrl().getHost().equals("login.microsoftonline.com") || request.getUrl().getHost().equals("accounts.google.com") || request.getUrl().getHost().equals("appleid.apple.com")){
+                    if (Objects.equals(request.getUrl().getHost(), "login.microsoftonline.com") || request.getUrl().getHost().equals("accounts.google.com") || request.getUrl().getHost().equals("appleid.apple.com")){
                         Toast.makeText(context, context.getString(R.string.error_microsoft_google), Toast.LENGTH_LONG).show();
                         resetChat();
                     }
@@ -246,13 +247,13 @@ public class MainActivity extends Activity {
                 }
                 boolean allowed = false;
                 for (String url : allowedDomains) {
-                    if (request.getUrl().getHost().endsWith(url)) {
+                    if (Objects.requireNonNull(request.getUrl().getHost()).endsWith(url)) {
                         allowed = true;
                     }
                 }
                 if (!allowed) {
                     Log.d(TAG, "[shouldOverrideUrlLoading][NOT ON ALLOWLIST] Blocked access to " + request.getUrl().getHost());
-                    if (request.getUrl().getHost().equals("login.microsoftonline.com") || request.getUrl().getHost().equals("accounts.google.com") || request.getUrl().getHost().equals("appleid.apple.com")){
+                    if (Objects.equals(request.getUrl().getHost(), "login.microsoftonline.com") || request.getUrl().getHost().equals("accounts.google.com") || request.getUrl().getHost().equals("appleid.apple.com")){
                         Toast.makeText(context, context.getString(R.string.error_microsoft_google), Toast.LENGTH_LONG).show();
                         resetChat();
                     }
@@ -309,9 +310,8 @@ public class MainActivity extends Activity {
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         //Credit (CC BY-SA 3.0): https://stackoverflow.com/a/6077173
         if (event.getAction() == KeyEvent.ACTION_DOWN) {
-            switch (keyCode) {
-                case KeyEvent.KEYCODE_BACK:
-                    if (chatWebView.canGoBack() && !chatWebView.getUrl().equals("about:blank")) {
+            if (keyCode == KeyEvent.KEYCODE_BACK) {
+                if (chatWebView.canGoBack() && !Objects.equals(chatWebView.getUrl(), "about:blank")) {
                         chatWebView.goBack();
                     } else {
                         finish();
