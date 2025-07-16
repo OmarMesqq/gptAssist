@@ -292,6 +292,7 @@ public class MainActivity extends Activity {
             chatWebSettings.setSafeBrowsingEnabled(false);
 //            chatWebSettings.setOffscreenPreRaster(true);
         }
+        chatWebView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
 
         //Load ChatGPT
         chatWebView.loadUrl(urlToLoad);
