@@ -217,10 +217,6 @@ public class MainActivity extends Activity {
                 }
                 if (!allowed) {
                     Log.d(TAG, "[shouldInterceptRequest][NOT ON ALLOWLIST] Blocked access to " + request.getUrl().getHost());
-                    if (Objects.equals(request.getUrl().getHost(), "login.microsoftonline.com") || request.getUrl().getHost().equals("accounts.google.com") || request.getUrl().getHost().equals("appleid.apple.com")){
-                        Toast.makeText(context, context.getString(R.string.error_microsoft_google), Toast.LENGTH_LONG).show();
-                        resetChat();
-                    }
                     if (request.getUrl().toString().contains("gravatar.com/avatar/")) {
                         AssetManager assetManager = getAssets();
                         try {
@@ -254,10 +250,6 @@ public class MainActivity extends Activity {
                 }
                 if (!allowed) {
                     Log.d(TAG, "[shouldOverrideUrlLoading][NOT ON ALLOWLIST] Blocked access to " + request.getUrl().getHost());
-                    if (Objects.equals(request.getUrl().getHost(), "login.microsoftonline.com") || request.getUrl().getHost().equals("accounts.google.com") || request.getUrl().getHost().equals("appleid.apple.com")){
-                        Toast.makeText(context, context.getString(R.string.error_microsoft_google), Toast.LENGTH_LONG).show();
-                        resetChat();
-                    }
                     return true; //Deny URLs not on ALLOWLIST
                 }
                 return false;
@@ -327,22 +319,6 @@ public class MainActivity extends Activity {
             }
         }
         return super.onKeyDown(keyCode, event);
-    }
-
-    public void resetChat()  {
-
-        chatWebView.clearFormData();
-        chatWebView.clearHistory();
-        chatWebView.clearMatches();
-        chatWebView.clearSslPreferences();
-        chatCookieManager.removeSessionCookies(null);
-        chatCookieManager.removeAllCookies(null);
-        CookieManager.getInstance().removeAllCookies(null);
-        CookieManager.getInstance().flush();
-        WebStorage.getInstance().deleteAllData();
-        chatWebView.loadUrl(urlToLoad);
-
-
     }
 
     private static void initURLs() {
