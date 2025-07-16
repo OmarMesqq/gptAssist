@@ -86,12 +86,12 @@ public class MainActivity extends Activity {
     protected void onResume() {
         super.onResume();
 
-        if (restricted) restrictedButton.setImageDrawable(getDrawable(R.drawable.restricted));
+        if (shouldRestrict) restrictedButton.setImageDrawable(getDrawable(R.drawable.restricted));
         else restrictedButton.setImageDrawable(getDrawable(R.drawable.unrestricted));
 
         restrictedButton.setOnClickListener(v -> {
-            restricted = !restricted;
-            if (restricted) {
+            shouldRestrict = !shouldRestrict;
+            if (shouldRestrict) {
                 restrictedButton.setImageDrawable(getDrawable(R.drawable.restricted));
                 Toast.makeText(context,R.string.urls_restricted,Toast.LENGTH_SHORT).show();
                 chatWebSettings.setUserAgentString(modUserAgent());
@@ -120,7 +120,7 @@ public class MainActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        restricted = true;
+        shouldRestrict = true;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             setTheme(android.R.style.Theme_DeviceDefault_DayNight);
         }
@@ -199,7 +199,7 @@ public class MainActivity extends Activity {
             //Keep these in sync!
             @Override
             public WebResourceResponse shouldInterceptRequest(final WebView view, WebResourceRequest request) {
-                if (!restricted) return null;
+                if (!shouldRestrict) return null;
 
                 if (request.getUrl().toString().equals("about:blank")) {
                     return null;
@@ -236,7 +236,7 @@ public class MainActivity extends Activity {
 
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
-                if (!restricted) return false;
+                if (!shouldRestrict) return false;
 
                 if (request.getUrl().toString().equals("about:blank")) {
                     return false;
