@@ -295,6 +295,12 @@ public class MainActivity extends Activity {
         chatWebSettings.setDisplayZoomControls(false);
         chatWebSettings.setSaveFormData(false);
         chatWebSettings.setGeolocationEnabled(false);
+        chatWebSettings.setUserAgentString(modUserAgent());
+        chatWebSettings.setMixedContentMode(WebSettings.MIXED_CONTENT_NEVER_ALLOW);     // only load HTTPS content from all origins
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            chatWebSettings.setSafeBrowsingEnabled(false);
+//            chatWebSettings.setOffscreenPreRaster(true);
+        }
 
         //Load ChatGPT
         chatWebView.loadUrl(urlToLoad);
@@ -344,10 +350,8 @@ public class MainActivity extends Activity {
         allowedDomains.add("auth.openai.com");
         allowedDomains.add("chatgpt.com");
         allowedDomains.add("openai.com");
-        allowedDomains.add("fileserviceuploadsperm.blob.core.windows.net");
         allowedDomains.add("cdn.oaistatic.com");
         allowedDomains.add("oaiusercontent.com");
-
     }
 
     @Override
