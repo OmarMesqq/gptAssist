@@ -44,14 +44,12 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
-import android.webkit.WebStorage;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageButton;
 import android.widget.Toast;
 import android.webkit.ValueCallback;
 import android.net.Uri;
-
 import androidx.annotation.NonNull;
 import androidx.webkit.URLUtilCompat;
 import java.io.IOException;
@@ -297,7 +295,6 @@ public class MainActivity extends Activity {
 
         //Load ChatGPT
         chatWebView.loadUrl(urlToLoad);
-        if (GithubStar.shouldShowStarDialog(this)) GithubStar.starDialog(this,"https://github.com/woheller69/gptassist");
     }
 
     @Override
