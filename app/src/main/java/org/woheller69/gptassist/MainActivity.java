@@ -154,10 +154,8 @@ public class MainActivity extends Activity {
 
             @Override
             public boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]> filePathCallback, FileChooserParams fileChooserParams) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                        requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 100);
-                    }
+                if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 100);
                 }
                 if (mUploadMessage != null) {
                     mUploadMessage.onReceiveValue(null);
@@ -175,20 +173,16 @@ public class MainActivity extends Activity {
 
             @Override
             public void onPermissionRequest(final android.webkit.PermissionRequest request) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    if (request.getResources().length > 0 && request.getResources()[0].equals(android.webkit.PermissionRequest.RESOURCE_AUDIO_CAPTURE)) {
-                        if (checkSelfPermission(Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
-                            request.grant(request.getResources());
-                        } else {
-                            // Request the permission from the user
-                            requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO}, 123);
-                            // A more robust solution would involve storing 'request' and calling request.grant() in onRequestPermissionsResult.
-                        }
+                if (request.getResources().length > 0 && request.getResources()[0].equals(android.webkit.PermissionRequest.RESOURCE_AUDIO_CAPTURE)) {
+                    if (checkSelfPermission(Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
+                        request.grant(request.getResources());
                     } else {
-                        request.deny();
+                        // Request the permission from the user
+                        requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO}, 123);
+                        // A more robust solution would involve storing 'request' and calling request.grant() in onRequestPermissionsResult.
                     }
                 } else {
-                    request.grant(request.getResources()); // For older Android versions, permissions are granted at install time
+                    request.deny();
                 }
             }
 
