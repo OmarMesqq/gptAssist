@@ -327,8 +327,8 @@ public class MainActivity extends Activity {
         chatWebView.clearHistory();
         chatWebView.clearMatches();
         chatWebView.clearSslPreferences();
-        chatCookieManager.removeSessionCookie();
-        chatCookieManager.removeAllCookie();
+        chatCookieManager.removeSessionCookies(null);
+        chatCookieManager.removeAllCookies(null);
         CookieManager.getInstance().removeAllCookies(null);
         CookieManager.getInstance().flush();
         WebStorage.getInstance().deleteAllData();
