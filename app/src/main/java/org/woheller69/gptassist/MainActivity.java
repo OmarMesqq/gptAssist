@@ -55,7 +55,7 @@ import android.net.Uri;
 import androidx.webkit.URLUtilCompat;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
+import java.util.Set;
 
 public class MainActivity extends Activity {
 
@@ -68,8 +68,9 @@ public class MainActivity extends Activity {
     private final String TAG ="gptAssist";
     private final String urlToLoad = "https://chatgpt.com/";
     private static boolean restricted = true;
-
-    private static final ArrayList<String> allowedDomains = new ArrayList<String>();
+    private static final Set<String> ALLOWED_HOSTS = Set.of(
+            "cdn.auth0.com", "auth.openai.com", "chatgpt.com",
+            "openai.com", "cdn.oaistatic.com", "oaiusercontent.com");
 
     private ValueCallback<Uri[]> mUploadMessage;
     private final static int FILE_CHOOSER_REQUEST_CODE = 1;
@@ -139,7 +140,6 @@ public class MainActivity extends Activity {
         chatCookieManager.setAcceptThirdPartyCookies(chatWebView, false);
 
         //Restrict what gets loaded
-        initURLs();
         registerForContextMenu(chatWebView);
 
         chatWebView.setWebChromeClient(new WebChromeClient(){
@@ -201,12 +201,8 @@ public class MainActivity extends Activity {
                     Log.d(TAG, "[shouldInterceptRequest][NON-HTTPS] Blocked access to " + request.getUrl().toString());
                     return new WebResourceResponse("text/javascript", "UTF-8", null); //Deny URLs that aren't HTTPS
                 }
-                boolean allowed = false;
-                for (String url : allowedDomains) {
-                    if (request.getUrl().getHost().endsWith(url)) {
-                        allowed = true;
-                    }
-                }
+                boolean allowed = ALLOWED_HOSTS.stream().anyMatch(request.getUrl().getHost()::endsWith);
+
                 if (!allowed) {
                     Log.d(TAG, "[shouldInterceptRequest][NOT ON ALLOWLIST] Blocked access to " + request.getUrl().getHost());
                     if (request.getUrl().getHost().equals("login.microsoftonline.com") || request.getUrl().getHost().equals("accounts.google.com") || request.getUrl().getHost().equals("appleid.apple.com")){
@@ -238,12 +234,8 @@ public class MainActivity extends Activity {
                     Log.d(TAG, "[shouldOverrideUrlLoading][NON-HTTPS] Blocked access to " + request.getUrl().toString());
                     return true; //Deny URLs that aren't HTTPS
                 }
-                boolean allowed = false;
-                for (String url : allowedDomains) {
-                    if (request.getUrl().getHost().endsWith(url)) {
-                        allowed = true;
-                    }
-                }
+                boolean allowed = ALLOWED_HOSTS.stream().anyMatch(request.getUrl().getHost()::endsWith);
+
                 if (!allowed) {
                     Log.d(TAG, "[shouldOverrideUrlLoading][NOT ON ALLOWLIST] Blocked access to " + request.getUrl().getHost());
                     if (request.getUrl().getHost().equals("login.microsoftonline.com") || request.getUrl().getHost().equals("accounts.google.com") || request.getUrl().getHost().equals("appleid.apple.com")){
@@ -331,17 +323,6 @@ public class MainActivity extends Activity {
 
     }
 
-    private static void initURLs() {
-        //Allowed Domains
-        allowedDomains.add("cdn.auth0.com");
-        allowedDomains.add("auth.openai.com");
-        allowedDomains.add("chatgpt.com");
-        allowedDomains.add("openai.com");
-        allowedDomains.add("cdn.oaistatic.com");
-        allowedDomains.add("oaiusercontent.com");
-
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
@@ -399,13 +380,8 @@ public class MainActivity extends Activity {
                 }
                 String host = Uri.parse(url).getHost();
                 if (host != null) {
-                    boolean allowed = false;
-                    for (String domain : allowedDomains) {
-                        if (host.endsWith(domain)) {
-                            allowed = true;
-                            break;
-                        }
-                    }
+                    boolean allowed = ALLOWED_HOSTS.stream().anyMatch(host::endsWith);
+
                     if (!allowed) {  //Copy URLs that are not allowed to open to clipboard
                         ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
                         ClipData clip = ClipData.newPlainText(getString(R.string.app_name), url);
