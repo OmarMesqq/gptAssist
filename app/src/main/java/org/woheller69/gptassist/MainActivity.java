@@ -434,12 +434,9 @@ public class MainActivity extends Activity {
         }
         // Handle other permission requests if any (like FILE_CHOOSER_REQUEST_CODE)
         if (requestCode == 100) { // This is the request code for READ_EXTERNAL_STORAGE from onShowFileChooser
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Permission granted for file access
-            } else {
+            if (!(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
                 Toast.makeText(context, "Storage permission denied.", Toast.LENGTH_SHORT).show();
             }
         }
     }
-
 }
